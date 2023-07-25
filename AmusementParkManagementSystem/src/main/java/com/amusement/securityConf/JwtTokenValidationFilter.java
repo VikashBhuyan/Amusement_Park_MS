@@ -1,4 +1,4 @@
-package com.amusement.securityConf;
+ package com.amusement.securityConf;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;

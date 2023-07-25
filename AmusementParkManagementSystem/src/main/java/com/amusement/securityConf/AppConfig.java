@@ -1,9 +1,5 @@
-package com.amusement.securityConf;
+ package com.amusement.securityConf;
 
-import com.amusement.DTO.CustomerDTO;
-import com.amusement.exception.CustomerException;
-import com.amusement.service.CustomerService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,19 +16,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-<<<<<<< HEAD
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
 
-import java.util.Arrays;
-import java.util.Collections;
-@Configuration
-=======
+import com.amusement.DTO.CustomerDTO;
+import com.amusement.exception.CustomerException;
+import com.amusement.service.CustomerService;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @EnableWebSecurity
 @Slf4j
->>>>>>> 1751f81c0b8c1501de2405c071cb8f464002eccc
 public class AppConfig {
 
     @Bean
@@ -43,10 +36,12 @@ public class AppConfig {
                     auth
                             .requestMatchers(HttpMethod.POST, "/customers/", "/customers").permitAll()
                             .requestMatchers(HttpMethod.DELETE, "/customers/{customerId}", "/customers/{customerId}/").hasRole("USER")
+                            .requestMatchers("/swagger-ui*/**","/v3/api-docs/**").permitAll()  //For swagger
                             .anyRequest().authenticated();
                 })
                 .addFilterBefore(new JwtTokenValidationFilter(), BasicAuthenticationFilter.class)
                 .addFilterAfter(new JwtTokenGeneratorFilter(), BasicAuthenticationFilter.class)
+                //Using the below config will make sure JSEssion id wont be used. Only one login will be required
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .cors(cors -> cors.disable())
                 .csrf(csrf -> csrf.disable())
